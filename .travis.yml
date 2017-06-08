@@ -10,4 +10,4 @@ cache: pip
 # command to install dependencies
 install: pip install -U setuptools tox-travis -r requirements.txt -r requirements-test.txt
 # command to run tests
-script: py.test --cov
+script: py.test --cov restQL

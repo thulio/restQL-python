@@ -13,11 +13,13 @@ setup(
     version='0.1.0',
     py_modules=['restQL'],
     install_requires=[
+        'python-box==3.0.1',
         'requests[security]==2.17.3',
         'six==1.10.0'
     ],
     test_suite='tests',
     tests_require=[
+        'mock==2.0.0; python_version == "2.7"',
         'pytest==3.1.1',
         'pytest-cov==2.5.1',
         'tox==2.7.0'

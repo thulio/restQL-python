@@ -1,2 +1,3 @@
+python-box==3.0.1
 requests[security]==2.17.3
 six==1.10.0
