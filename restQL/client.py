@@ -9,11 +9,20 @@ class Client:
 
     def __init__(self, url, extra_params=None):
         self.url = url
-        self.params = extra_params
+        self.params = extra_params or {}
 
-    def run_query(self, query):
-        response = requests.post(self.url + self.RUN_QUERY, params=self.params, data=query,
+    def run_query(self, query, params=None):
+        params = dict(list(self.params.items()) + list(params.items())) if params else self.params
+        response = requests.post(self.url + self.RUN_QUERY, params=params, data=query,
                                  headers={'Content-type': 'text/plain'})
+
+        return Response(response)
+
+    def run_named_query(self, namespace, name, revision, params=None):
+        params = dict(list(self.params.items()) + list(params.items())) if params else self.params
+        url = self.url + self.RUN_QUERY + '/{namespace}/{name}/{revision}'.format(namespace=namespace, name=name,
+                                                                                  revision=revision)
+        response = requests.get(url, params=params, headers={'Content-type': 'text/plain'})
 
         return Response(response)
 
