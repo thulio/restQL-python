@@ -15,14 +15,14 @@ class Client:
         self.headers = {'Content-type': 'text/plain'}
 
     def run_query(self, query, params=None):
-        params = dict(list(self.params.items()) + list(params.items())) if params else self.params
+        params = self._build_params(params)
         response = requests.post(self.url + self.RUN_QUERY, params=params, data=query,
                                  headers=self.headers)
 
         return Response(response)
 
     def run_named_query(self, namespace, name, revision, params=None):
-        params = dict(list(self.params.items()) + list(params.items())) if params else self.params
+        params = self._build_params(params)
         url = self.url + self.RUN_QUERY + '/{namespace}/{name}/{revision}'.format(namespace=namespace, name=name,
                                                                                   revision=revision)
         response = requests.get(url, params=params, headers=self.headers)
@@ -33,6 +33,15 @@ class Client:
         response = requests.post(self.url + self.PARSE_QUERY, data=query, headers=self.headers)
 
         return response.ok
+
+    def _build_params(self, params):
+        if params:
+            new_params = self.params.copy()
+            new_params.update(params)
+        else:
+            new_params = self.params
+
+        return new_params
 
 
 class Response(object):

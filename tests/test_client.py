@@ -118,3 +118,19 @@ class TestClient(unittest.TestCase):
 
         response = client.parse_query("")
         self.assertTrue(response)
+
+    def test_extra_params(self):
+        query = "from planets as allPlanets"
+        response_mock = mock.Mock()
+        response_mock.status_code = 200
+        response_mock.json.return_value = load_fixture('allPlanets.json')
+        self.requests_post_mock.return_value = response_mock
+
+        client = Client('http://localhost:9000')
+        client.run_query(query, params={'other-param': 'value'})
+
+        self.assertEqual(self.requests_post_mock.call_count, 1)
+        self.assertEqual(self.requests_post_mock.call_args_list, [mock.call('http://localhost:9000/run-query',
+                                                                            data='from planets as allPlanets',
+                                                                            headers={'Content-type': 'text/plain'},
+                                                                            params={'other-param': 'value'})])
