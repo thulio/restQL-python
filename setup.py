@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import codecs
 import os.path
-from setuptools import setup
+from setuptools import setup, find_packages
 
 PROJECT_DIR = os.path.abspath(os.path.dirname(__file__))
 
@@ -10,8 +10,8 @@ with codecs.open(os.path.join(PROJECT_DIR, 'README.rst'), encoding='utf-8') as f
 
 setup(
     name='restQL',
-    version='0.1.0',
-    py_modules=['restQL'],
+    version='0.1.2',
+    packages=find_packages(exclude=['tests*']),
     install_requires=[
         'python-box==3.0.1',
         'requests[security]==2.17.3',
