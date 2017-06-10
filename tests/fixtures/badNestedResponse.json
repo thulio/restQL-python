@@ -1,0 +1,10 @@
+{
+  "allPlanets": [{
+    "details": {
+      "success": false,
+      "status": 401,
+      "metadata": {}
+    },
+    "result": {}
+  }]
+}

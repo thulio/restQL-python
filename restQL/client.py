@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 import requests
+import six
 from box import Box
 
 
@@ -30,21 +31,36 @@ class Client:
 class Response(object):
     def __init__(self, http_response):
         self.response = http_response
-        self.resources = self._get_resources()
+        self.status, self.resources = self._get_resources()
 
     def _get_resources(self):
         json_data = self.response.json()
-        resources_names = list(json_data.keys())
+        resources_names = six.iterkeys(json_data)
         resources = {}
+        status = {}
         for resource in resources_names:
             data = json_data[resource]
             if isinstance(data, dict):
+                status[resource] = Box(data['details'])
                 resources[resource] = Box(data['result'])
 
             elif isinstance(data, list):
                 resources[resource] = [Box(d['result']) for d in data]
+                status[resource] = [Box(d['details']) for d in data]
 
-        return resources
+        return status, resources
+
+    def ok(self):
+        for key, value in six.iteritems(self.status):
+            if isinstance(value, list):
+                for status in value:
+                    if not status.success:
+                        return False
+            else:
+                if not value.success:
+                    return False
+
+        return True
 
     def __getattr__(self, item):
         return self.resources[item]

@@ -70,3 +70,37 @@ class TestClient(unittest.TestCase):
                                                                             params={})])
         self.assertTrue(isinstance(response.allPlanets, list))
         self.assertEqual(len(response.allPlanets[0].results), 2)
+
+    def test_ok(self):
+        query = "from planets as allPlanets"
+        response_mock = mock.Mock()
+        response_mock.status_code = 200
+        response_mock.json.return_value = load_fixture('allPlanets.json')
+        self.requests_post_mock.return_value = response_mock
+
+        client = Client('http://localhost:9000')
+        response = client.run_query(query)
+
+        self.assertTrue(response.ok())
+
+        query = "from planets as allPlanets"
+        response_mock = mock.Mock()
+        response_mock.status_code = 200
+        response_mock.json.return_value = load_fixture('badResponse.json')
+        self.requests_post_mock.return_value = response_mock
+
+        client = Client('http://localhost:9000')
+        response = client.run_query(query)
+
+        self.assertFalse(response.ok())
+
+        query = "from planets as allPlanets"
+        response_mock = mock.Mock()
+        response_mock.status_code = 200
+        response_mock.json.return_value = load_fixture('badNestedResponse.json')
+        self.requests_post_mock.return_value = response_mock
+
+        client = Client('http://localhost:9000')
+        response = client.run_query(query)
+
+        self.assertFalse(response.ok())
