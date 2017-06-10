@@ -104,3 +104,17 @@ class TestClient(unittest.TestCase):
         response = client.run_query(query)
 
         self.assertFalse(response.ok())
+
+    def test_parse_query(self):
+        response_mock = mock.Mock()
+        response_mock.ok = False
+        self.requests_post_mock.return_value = response_mock
+
+        client = Client('http://localhost:9000')
+        response = client.parse_query("")
+        self.assertFalse(response)
+
+        response_mock.ok = True
+
+        response = client.parse_query("")
+        self.assertTrue(response)

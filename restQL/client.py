@@ -7,15 +7,17 @@ from box import Box
 
 class Client:
     RUN_QUERY = '/run-query'
+    PARSE_QUERY = '/parse-query'
 
     def __init__(self, url, extra_params=None):
         self.url = url
         self.params = extra_params or {}
+        self.headers = {'Content-type': 'text/plain'}
 
     def run_query(self, query, params=None):
         params = dict(list(self.params.items()) + list(params.items())) if params else self.params
         response = requests.post(self.url + self.RUN_QUERY, params=params, data=query,
-                                 headers={'Content-type': 'text/plain'})
+                                 headers=self.headers)
 
         return Response(response)
 
@@ -23,9 +25,14 @@ class Client:
         params = dict(list(self.params.items()) + list(params.items())) if params else self.params
         url = self.url + self.RUN_QUERY + '/{namespace}/{name}/{revision}'.format(namespace=namespace, name=name,
                                                                                   revision=revision)
-        response = requests.get(url, params=params, headers={'Content-type': 'text/plain'})
+        response = requests.get(url, params=params, headers=self.headers)
 
         return Response(response)
+
+    def parse_query(self, query):
+        response = requests.post(self.url + self.PARSE_QUERY, data=query, headers=self.headers)
+
+        return response.ok
 
 
 class Response(object):
