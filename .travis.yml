@@ -8,6 +8,9 @@ python:
 #  - "pypy-5.6.0"
 cache: pip
 # command to install dependencies
-install: pip install -U setuptools tox-travis -r requirements.txt -r requirements-test.txt
+install: pip install -U setuptools tox-travis codecov -r requirements.txt -r requirements-test.txt
 # command to run tests
 script: py.test --cov restQL
+
+after_success:
+  - codecov
