@@ -1,0 +1,19 @@
+[[source]]
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+
+"python-box" = "*"
+requests = {extras = ["security"]}
+six = "*"
+
+
+[dev-packages]
+
+mock = {markers = "python_version == '2.7'"}
+pytest = "*"
+"pytest-cov" = "*"
+tox = "*"
+
